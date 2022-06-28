@@ -43,6 +43,7 @@ class Words(models.Model):
     Все слова, что есть в системе с наиболее популярными (или первыми добавленными) переводами.
     Пока поля word_class (часть речи), past_form (вторая форма неправильного глагола),
     past_participle (третья форма неправильного глагола) добавлены как заглушки на будущее.
+    short: сокращение или альтернативная версия слова.
     """
     word = models.CharField(max_length=200, unique=True)
     def_translations = models.CharField(max_length=200)
