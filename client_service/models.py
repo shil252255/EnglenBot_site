@@ -1,7 +1,7 @@
 from django.db import models
 import pytz
 
-from languages_list import LANGUAGES
+from .languages_list import LANGUAGES
 
 
 class ServiceUser(models.Model):
@@ -22,17 +22,17 @@ class ServiceUser(models.Model):
     ROLES = (('admin', 'admin'), ('moderator', 'moderator'), ('user', 'user'))
 
     tg_id = models.BigIntegerField(unique=True, blank=True)
-    first_name = models.CharField()
-    last_name = models.CharField(null=True, blank=True)
-    tg_username = models.CharField(null=True, blank=True)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200, null=True, blank=True)
+    tg_username = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    phone = models.CharField(null=True, blank=True)
+    phone = models.CharField(max_length=200, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LANGUAGES, default='ru')
     timezone = models.CharField(max_length=32, choices=TIMEZONES, default='UTC')
     registration_date = models.DateTimeField(auto_now_add=True)
     role = models.CharField(max_length=20, choices=ROLES, default='user')
     is_delete = models.BooleanField(default=False)
-    password = models.CharField(null=True, blank=True)
+    password = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.first_name+self.last_name
@@ -44,12 +44,12 @@ class Words(models.Model):
     Пока поля word_class (часть речи), past_form (вторая форма неправильного глагола),
     past_participle (третья форма неправильного глагола) добавлены как заглушки на будущее.
     """
-    word = models.CharField(unique=True)
-    def_translations = models.CharField()
-    word_class = models.CharField(null=True, blank=True)
-    past_form = models.CharField(null=True, blank=True)
-    past_participle = models.CharField(null=True, blank=True)
-    short = models.CharField(null=True, blank=True)
+    word = models.CharField(max_length=200, unique=True)
+    def_translations = models.CharField(max_length=200)
+    word_class = models.CharField(max_length=200, null=True, blank=True)
+    past_form = models.CharField(max_length=200, null=True, blank=True)
+    past_participle = models.CharField(max_length=200, null=True, blank=True)
+    short = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.word
@@ -58,8 +58,8 @@ class Words(models.Model):
 class Videos(models.Model):
     """Предполагаю создание словарей на основе видео"""
     url = models.URLField()
-    name = models.CharField()
-    chanel_name = models.CharField(null=True, blank=True)
+    name = models.CharField(max_length=200, )
+    chanel_name = models.CharField(max_length=200, null=True, blank=True)
     chanel_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
@@ -75,10 +75,10 @@ class Dicts(models.Model):
     is_personal = models.BooleanField(default=True)
     video = models.ForeignKey(Videos, on_delete=models.CASCADE, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(ServiceUser, on_delete=models.DO_NOTHING)
-    change_on = models.DateTimeField(auto_now=True)
-    change_by = models.ForeignKey(ServiceUser, on_delete=models.DO_NOTHING)
-    name = models.CharField()
+    created_by = models.ForeignKey(ServiceUser, on_delete=models.DO_NOTHING, related_name='created_by')
+    changed_on = models.DateTimeField(auto_now=True)
+    changed_by = models.ForeignKey(ServiceUser, on_delete=models.DO_NOTHING)
+    name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     is_private = models.BooleanField(default=True)
     is_changeable = models.BooleanField(default=False)
@@ -96,7 +96,7 @@ class WordsToDicts(models.Model):
     word = models.ForeignKey(Words, on_delete=models.CASCADE)
     dictionary = models.ForeignKey(Dicts, on_delete=models.CASCADE)
     serial_number = models.IntegerField(null=True, blank=True)
-    personal_translation = models.CharField(null=True, blank=True)
+    personal_translation = models.CharField(max_length=200, null=True, blank=True)
 
 
 class DictToUser(models.Model):
@@ -129,9 +129,9 @@ class Mistakes(models.Model):
     Предполагается сохранять все ошибки, чтобы находить наиболее сложные слова и
     наиболее частые неправильные ассоциации слов и подкидывать их чаще.
     """
-    word = models.ForeignKey(Words, on_delete=models.CASCADE)
-    user = models.ForeignKey(ServiceUser, on_delete=models.CASCADE)
-    answer = models.ForeignKey(Words, on_delete=models.CASCADE)
+    word = models.ForeignKey(Words, on_delete=models.CASCADE, related_name='word_with_mistakes')
+    user = models.ForeignKey(ServiceUser, on_delete=models.CASCADE, related_name='user_mistakes')
+    answer = models.ForeignKey(Words, on_delete=models.CASCADE, related_name='wrong_answer')
 
 
 
