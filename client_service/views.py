@@ -1,18 +1,10 @@
 import random
 from django.shortcuts import render
-from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 from .models import *
-
-
-class WordSerializer(serializers.ModelSerializer):
-    """
-    Пока расположил его тут для простоты, потом перенесу его. (Если он вообще мне понадобиться)
-    """
-    class Meta:
-        model = Words
-        fields = ['pk', 'word', 'def_translations', 'word_class', 'past_form', 'past_participle', 'short']
+from .serializers import *
 
 
 class RandomWord(APIView):
@@ -26,3 +18,12 @@ class RandomWord(APIView):
         return Response(serialized_random_word.data)
 
 
+class TgUser(APIView):
+    """
+    Добавление пользователя телеграмм при помощи бота.
+    """
+    def get(self, *args, **kwargs):
+        pass
+
+    def post(self, *args, **kwargs):
+        pass
