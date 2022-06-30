@@ -7,6 +7,10 @@ from .models import *
 from .serializers import *
 
 
+def api_info(request):
+    return render(request, 'client_service/API_Info.html')
+
+
 class RandomWord(APIView):
     """
     Простая функция, для того чтобы проверить работу API.
