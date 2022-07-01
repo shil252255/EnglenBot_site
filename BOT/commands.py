@@ -1,6 +1,6 @@
 from aiogram import types
 # from aiogram.types import message
-from BOT.data_fetcher import get_random_word
+from BOT.data_fetcher import *
 from app import dp
 
 
@@ -12,7 +12,9 @@ async def sey_hello(message: types.Message):
     :param message:
     :return:
     """
-    await message.reply('Hello!')
+    res = await add_new_tg_user(message.from_user)
+    print(res)
+    await message.answer('Hello!')
 
 
 @dp.message_handler(commands=['random'])

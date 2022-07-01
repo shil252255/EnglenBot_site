@@ -1,7 +1,9 @@
 import random
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 
 from .models import *
 from .serializers import *
@@ -22,12 +24,10 @@ class RandomWord(APIView):
         return Response(serialized_random_word.data)
 
 
-class TgUser(APIView):
+class TgUser(CreateAPIView):
     """
     Добавление пользователя телеграмм при помощи бота.
     """
-    def get(self, *args, **kwargs):
-        pass
+    serializer_class = ServiceUserSerializer
+    permission_classes = (IsAdminUser, )
 
-    def post(self, *args, **kwargs):
-        pass

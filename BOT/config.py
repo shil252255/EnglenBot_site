@@ -10,3 +10,4 @@ load_dotenv()
 """
 
 TELEGRAM_API_KEY = os.environ['TELEGRAM_API_KEY']
+ENGLENBOT_API_KEY = os.environ['ENGLENBOT_API_KEY']
